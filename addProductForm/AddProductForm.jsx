@@ -1,11 +1,17 @@
 import { useState } from 'react';
 import css from './AddProductForm.module.css';
 import formatDate from 'function/formatData';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addProductDiary } from '../../redux/diary/diaryOperations';
+import { selectDiaryError } from '../../redux/diary/diarySelectors';
+import { handleSuccess } from '../../redux/products/productsSlice';
+
 export const AddProductForm = ({ data }) => {
   const [inputCals, setInputCals] = useState(0);
   const dispatch = useDispatch();
+  const addError = useSelector(selectDiaryError);
+  // const all = useSelector(state => state);
+  // console.log(addError);
   const { calories, title, _id } = data;
   const countCalories = (inputCals * calories) / 100;
   const handleChange = e => {
@@ -16,13 +22,14 @@ export const AddProductForm = ({ data }) => {
     const rawDate = new Date();
     const date = formatDate(rawDate);
     const add = {
-      productID: _id,
+      productId: _id,
       date,
       grams: Number(e.target.elements.amount.value),
       calories: Math.floor(countCalories),
     };
-    console.log(add);
-    dispatch(addProductDiary(add))
+    console.log(addError);
+    dispatch(addProductDiary(add));
+    !addError && dispatch(handleSuccess(true));
   };
   return (
     <form className={css.form} onSubmit={addToDiary}>
