@@ -12,18 +12,23 @@ import { selectSuccess } from '../../redux/products/productsSelectors';
 const ProductsPage = () => {
   const [open, setOpen] = useState(false);
   const [modal, setModal] = useState(null);
+  const [calories, setCalories] = useState(0);
   // const diary = useSelector(state=> state.diary)
   // console.log(diary)
   const isSuccess = useSelector(selectSuccess);
-  const products = useSelector(state => state.products);
-  console.log(products);
-  console.log('isSuccess', isSuccess);
+  // const products = useSelector(state => state.products);
+  // console.log(products);
+  // console.log('isSuccess', isSuccess);
   const handleClose = e => {
     setOpen(false);
   };
   const handleOpen = data => {
     setOpen(true);
     setModal(data);
+  };
+  const handleCalories = count => {
+    console.log(count);
+    setCalories(count);
   };
   return (
     <div className={css.productsPage}>
@@ -35,7 +40,11 @@ const ProductsPage = () => {
         </div>
       </Container>
       <BasicModalWindow isOpen={open} onClose={handleClose}>
-        {!isSuccess ? <AddProductForm data={modal} /> : <AddProductSuccess />}
+        {!isSuccess ? (
+          <AddProductForm data={modal} count={handleCalories} />
+        ) : (
+          <AddProductSuccess calories={calories} />
+        )}
       </BasicModalWindow>
     </div>
   );
